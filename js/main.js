@@ -4,6 +4,7 @@ let canvas;
 let engine;
 let scene;
 window.onload = startGame;
+let player;
 
 function startGame() {
   canvas = document.querySelector("#myCanvas");
@@ -17,17 +18,17 @@ function startGame() {
   // out of the game window)
   modifySettings();
 
-  let tank = scene.getMeshByName("heroTank");
+  //let tank = scene.getMeshByName("heroTank");
 
   scene.toRender = () => {
     let deltaTime = engine.getDeltaTime(); // remind you something ?
 
-    tank.move();
-    tank.fireCannonBalls(); // will fire only if space is pressed !
-    tank.fireLasers(); // will fire only if l is pressed !
+    //tank.move();
+    //tank.fireCannonBalls(); // will fire only if space is pressed !
+    //tank.fireLasers(); // will fire only if l is pressed !
 
     moveHeroDude();
-    moveOtherDudes();
+    //moveOtherDudes();
 
     scene.render();
   };
@@ -46,15 +47,15 @@ function createScene() {
   let ground = createGround(scene);
   //let freeCamera = createFreeCamera(scene);
 
-  let tank = createTank(scene);
-
+  ///let tank = createTank(scene);
+  createHeroDude(scene); // we added the creation of a follow camera for the dude
   // second parameter is the target to follow
-  scene.followCameraTank = createFollowCamera(scene, tank);
-  scene.activeCamera = scene.followCameraTank;
+  //scene.followCameraTank = createFollowCamera(scene, player);
+  scene.activeCamera = scene.followCameraDude;
 
   createLights(scene);
 
-  createHeroDude(scene); // we added the creation of a follow camera for the dude
+  
 
   loadSounds(scene);
 
@@ -143,6 +144,7 @@ function loadSounds(scene) {
     );
   };
 
+  ///son de fond
   binaryTask = assetsManager.addBinaryFileTask("pirates", "sounds/pirateFun.mp3");
   binaryTask.onSuccess = function (task) {
     scene.assets.pirateMusic = new BABYLON.Sound(
@@ -424,7 +426,7 @@ function createTank(scene) {
 
     cannonball.actionManager = new BABYLON.ActionManager(scene);
     // register an action for when the cannonball intesects a dude, so we need to iterate on each dude
-    scene.dudes.forEach((dude) => {
+    /*scene.dudes.forEach((dude) => {
       cannonball.actionManager.registerAction(
         new BABYLON.ExecuteCodeAction(
           {
@@ -444,7 +446,7 @@ function createTank(scene) {
           }
         )
       );
-    });
+    });*/
 
     // Make the cannonball disappear after 3s
     setTimeout(() => {
@@ -589,7 +591,7 @@ function createHeroDude(scene) {
     loadCrossHair(scene);
 
     // make clones
-    scene.dudes = [];
+    /*scene.dudes = [];
     for (let i = 0; i < 10; i++) {
       scene.dudes[i] = doClone(heroDude, skeletons, i);
       scene.beginAnimation(scene.dudes[i].skeleton, 0, 120, true, 1);
@@ -603,7 +605,7 @@ function createHeroDude(scene) {
     }
     // insert at pos 0, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
     // it will be easier for us to distinguish it later on...
-    scene.dudes.unshift(heroDude);
+    scene.dudes.unshift(heroDude);*/
   }
 }
 
