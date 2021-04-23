@@ -1,10 +1,11 @@
 import Dude from "./Dude.js";
+import Wall from "./Wall.js";
 
 let canvas;
 let engine;
 let scene;
 window.onload = startGame;
-let player;
+let level=1;
 
 function startGame() {
   canvas = document.querySelector("#myCanvas");
@@ -40,7 +41,7 @@ function startGame() {
 }
 
 function createScene() {
-  let scene = new BABYLON.Scene(engine);
+  scene = new BABYLON.Scene(engine);
   let sky = createSkybox(scene);
 
   scene.assetsManager = configureAssetManager(scene);
@@ -49,7 +50,7 @@ function createScene() {
   //let freeCamera = createFreeCamera(scene);
 
   
-  let walls = createWalls(scene);
+  createWalls();
 
   ///let tank = createTank(scene);
   createHeroDude(scene); // we added the creation of a follow camera for the dude
@@ -64,79 +65,12 @@ function createScene() {
   return scene;
 }
 
-function createWalls(scene){
-  var objectMaterial = new BABYLON.StandardMaterial("groundTexture", scene);
-  objectMaterial.diffuseTexture = new BABYLON.Texture("images/brick.jpg", scene);
+function createWalls(){
+  let walls = getWallsByLevel();
 
-  ///murs couloir
-  let wall = BABYLON.MeshBuilder.CreateBox("wall1",{height: 40, width: 5, depth: 600},scene); 
-  wall.position.x =40;
-  wall.position.y = 20;
-  wall.position.z = 700;  
-  wall.material = objectMaterial;
-  wall.checkCollisions = true;
-  let wall2 = BABYLON.MeshBuilder.CreateBox("wall2",{height: 40, width: 5, depth: 300},scene);
-  wall2.position.x =-40;
-  wall2.position.y = 20;
-  wall2.position.z = 850;
-  wall2.material = objectMaterial;
-  ///murs impasse
-  let wall3 = BABYLON.MeshBuilder.CreateBox("wall3",{height: 40, width: 120, depth: 5},scene);
-  wall3.position.x =-100;
-  wall3.position.y = 20;
-  wall3.position.z = 702.5;
-  wall3.material = objectMaterial;
-  let wall4 = BABYLON.MeshBuilder.CreateBox("wall4",{height: 40, width: 120, depth: 5},scene);
-  wall4.position.x =-100;
-  wall4.position.y = 20;
-  wall4.position.z = 662.5;
-  wall4.material = objectMaterial;
-  ///mur pour fermer l'impasse
-  let wall5 = BABYLON.MeshBuilder.CreateBox("wall5",{height: 40, width: 5, depth: 40},scene);
-  wall5.position.x =-140;
-  wall5.position.y = 20;
-  wall5.position.z = 682.5;
-  wall5.material = objectMaterial;
-  ///murs couloir
-  let wall6 = BABYLON.MeshBuilder.CreateBox("wall6",{height: 40, width: 5, depth: 600},scene);
-  wall6.position.x =-40;
-  wall6.position.y = 20;
-  wall6.position.z = 365;
-  wall6.material = objectMaterial;
-  ///mur impasse
-  let wall7 = BABYLON.MeshBuilder.CreateBox("wall7",{height: 40, width: 120, depth: 5},scene);
-  wall7.position.x = 100;
-  wall7.position.y = 20;
-  wall7.position.z = 402.5;
-  wall7.material = objectMaterial;
-  let wall8 = BABYLON.MeshBuilder.CreateBox("wall8",{height: 40, width: 120, depth: 5},scene);
-  wall8.position.x = 100;
-  wall8.position.y = 20;
-  wall8.position.z = 362.5;
-  wall8.material = objectMaterial;
-  ///mur pour fermer l'impasse
-  let wall9 = BABYLON.MeshBuilder.CreateBox("wall9",{height: 40, width: 5, depth: 40},scene);
-  wall9.position.x = 140;
-  wall9.position.y = 20;
-  wall9.position.z = 382.5;
-  wall9.material = objectMaterial;
-  ///murs couloir
-  let wall10 = BABYLON.MeshBuilder.CreateBox("wall10",{height: 40, width: 5, depth: 300},scene);
-  wall10.position.x = 40;
-  wall10.position.y = 20;
-  wall10.position.z = 215;
-  wall10.material = objectMaterial;
-  ///murs fermer couloir 
-  let wall11 = BABYLON.MeshBuilder.CreateBox("wall11",{height: 40, width: 80, depth: 5},scene);
-  wall11.position.x = 0;
-  wall11.position.y = 20;
-  wall11.position.z = 65;
-  wall11.material = objectMaterial;
-  let wall12 = BABYLON.MeshBuilder.CreateBox("wall12",{height: 40, width: 80, depth: 5},scene);
-  wall12.position.x = 0;
-  wall12.position.y = 20;
-  wall12.position.z = 995;
-  wall12.material = objectMaterial;
+  for(let i=0;i<walls.length;i++){
+    walls[i] = new Wall(walls[i].taille,walls[i].pos,i,scene); 
+  }
 }
 
 function createSkybox(scene) {
@@ -267,7 +201,7 @@ function loadCrossHair(scene) {
 
 function createGround(scene) {
   const groundOptions = {
-    width: 300,
+    width: 2000,
     height: 2000,
     subdivisions: 20,
     minHeight: 0,
@@ -757,6 +691,65 @@ function moveOtherDudes() {
 window.addEventListener("resize", () => {
   //engine.resize();
 });
+
+function getWallsByLevel(){
+  ///murs couloir
+  let walls = [
+                [{
+                  pos : { x :40, y :20,z : 700  },
+                  taille : {height: 40, width: 5, depth: 600}
+                },
+                {
+                  pos : { x :-40, y :20,z : 850  },
+                  taille : {height: 40, width: 5, depth: 300}
+                },
+                {
+                  pos : { x :-100, y :20,z : 702.5  },
+                  taille : {height: 40, width: 120, depth: 5}
+                },
+                {
+                  pos : { x :-100, y :20, z :662.5  },
+                  taille : {height: 40, width: 120, depth: 5}
+                },
+                {
+                  pos : { x :-140, y :20, z :682.5  },
+                  taille : {height: 40, width: 5, depth: 40}
+                },
+                {
+                  pos : { x :-40, y :20, z :365  },
+                  taille : {height: 40, width: 5, depth: 600}
+                },
+                {
+                  pos : { x :-40, y :20, z :365  },
+                  taille : {height: 40, width: 5, depth: 600}
+                },
+                {
+                  pos : { x :100, y :20, z :402.5  },
+                  taille : {height: 40, width: 120, depth: 5}
+                },
+                {
+                  pos : { x :100, y :20, z :362.5  },
+                  taille : {height: 40, width: 120, depth: 5}
+                },
+                {
+                  pos : { x :140, y :20, z :382.5  },
+                  taille : {height: 40, width: 5, depth: 40}
+                },
+                {
+                  pos : { x :40, y :20, z :215  },
+                  taille : {height: 40, width: 5, depth: 300}
+                },
+                {
+                  pos : { x :0, y :20, z :65  },
+                  taille : {height: 40, width: 80, depth: 5}
+                },
+                {
+                  pos : { x :0, y :20, z :995  },
+                  taille : {height: 40, width: 80, depth: 5}
+                }]
+              ]
+  return walls[level-1];
+}
 
 function modifySettings() {
   // as soon as we click on the game window, the mouse pointer is "locked"
