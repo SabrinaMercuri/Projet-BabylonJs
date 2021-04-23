@@ -66,7 +66,7 @@ function createScene() {
 
 function createWalls(scene){
   var objectMaterial = new BABYLON.StandardMaterial("groundTexture", scene);
-  objectMaterial.diffuseTexture = new BABYLON.Texture("images/pierre.jpg", scene);
+  objectMaterial.diffuseTexture = new BABYLON.Texture("images/brick.jpg", scene);
 
   ///murs couloir
   let wall = BABYLON.MeshBuilder.CreateBox("wall1",{height: 40, width: 5, depth: 600},scene); 
@@ -306,11 +306,11 @@ function createGround(scene) {
 
 function createLights(scene) {
   // i.e sun light with all light rays parallels, the vector is the direction.
-  let light0 = new BABYLON.DirectionalLight(
-    "dir0",
-    new BABYLON.Vector3(-1, -1, 0),
-    scene
-  );
+  let light0 = new BABYLON.HemisphericLight("dir0",new BABYLON.Vector3(-1, 1, 0),scene);
+  let light1 = new BABYLON.HemisphericLight("dir1",new BABYLON.Vector3(1, -1, 0),scene);
+
+  light0.intensity = 0.5;
+  light1.intensity = 0.5;
 }
 
 function createFreeCamera(scene, initialPosition) {
