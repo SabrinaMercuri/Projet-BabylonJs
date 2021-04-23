@@ -47,6 +47,9 @@ function createScene() {
   let ground = createGround(scene);
   //let freeCamera = createFreeCamera(scene);
 
+  
+  let walls = createWalls(scene);
+
   ///let tank = createTank(scene);
   createHeroDude(scene); // we added the creation of a follow camera for the dude
   // second parameter is the target to follow
@@ -55,11 +58,34 @@ function createScene() {
 
   createLights(scene);
 
-  
-
   loadSounds(scene);
 
   return scene;
+}
+
+function createWalls(scene){
+  let wall = BABYLON.Mesh.CreateBox("wall1",3,scene);
+  wall.height =20;
+  wall.width=5;
+  wall.depth=300;
+  wall.position.x =40;
+  wall.position.y = 0;
+  wall.position.z = 900;  
+  let wall2 = BABYLON.Mesh.CreateBox("wall2",3,scene);
+  wall2.scaling = new BABYLON.Vector3(5,20,300);
+  wall2.position.x =-40;
+  wall2.position.y = 20;
+  wall2.position.z = 900;
+  let wall3 = BABYLON.Mesh.CreateBox("wall3",3,scene);
+  wall3.position.x =-185;
+  wall3.position.y = 20;
+  wall3.position.z = 450;
+  wall3.scaling = new BABYLON.Vector3(100,20,3);
+  let wall4 = BABYLON.Mesh.CreateBox("wall4",3,scene);
+  wall4.position.x =-185;
+  wall4.position.y = 20;
+  wall4.position.z = 400;
+  wall4.scaling = new BABYLON.Vector3(100,20,3);
 }
 
 function configureAssetManager(scene) {
@@ -178,7 +204,7 @@ function loadCrossHair(scene) {
 
 function createGround(scene) {
   const groundOptions = {
-    width: 2000,
+    width: 300,
     height: 2000,
     subdivisions: 20,
     minHeight: 0,
@@ -188,7 +214,7 @@ function createGround(scene) {
   //scene is optional and defaults to the current scene
   const ground = BABYLON.MeshBuilder.CreateGroundFromHeightMap(
     "gdhm",
-    "images/hmap2.jpg",
+    "images/hmap0.png",
     groundOptions,
     scene
   );
@@ -557,6 +583,7 @@ function createHeroDude(scene) {
   function onDudeImported(newMeshes, particleSystems, skeletons) {
     let heroDude = newMeshes[0];
     heroDude.position = new BABYLON.Vector3(0, 0, 5); // The original dude
+    heroDude.position.z = 890;
     // make it smaller
     //heroDude.speed = 0.1;
 
