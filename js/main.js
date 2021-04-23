@@ -74,6 +74,7 @@ function createWalls(scene){
   wall.position.y = 20;
   wall.position.z = 700;  
   wall.material = objectMaterial;
+  wall.checkCollisions = true;
   let wall2 = BABYLON.MeshBuilder.CreateBox("wall2",{height: 40, width: 5, depth: 300},scene);
   wall2.position.x =-40;
   wall2.position.y = 20;
@@ -678,7 +679,9 @@ function createHeroDude(scene) {
     scene.freeCameraDude = createFreeCamera(scene, freeCamPosition);
     // associate a crosshair to this cam, to see where we are aiming
     loadCrossHair(scene);
-
+    scene.ennemi = doClone(heroDude,skeletons,1);
+    var temp = new Dude(scene.ennemi, 1, 0.3, 0.2, scene);
+    scene.ennemi.unshift(heroDude);
     // make clones
     /*scene.dudes = [];
     for (let i = 0; i < 10; i++) {
@@ -700,8 +703,8 @@ function createHeroDude(scene) {
 
 function doClone(originalMesh, skeletons, id) {
   let myClone;
-  let xrand = Math.floor(Math.random() * 500 - 250);
-  let zrand = Math.floor(Math.random() * 500 - 250);
+  let xrand = /*Math.floor(Math.random() * 500 - 250)*/-80;
+  let zrand = /*Math.floor(Math.random() * 500 - 250)*/680;
 
   myClone = originalMesh.clone("clone_" + id);
   myClone.position = new BABYLON.Vector3(xrand, 0, zrand);
@@ -752,7 +755,7 @@ function moveOtherDudes() {
 }
 
 window.addEventListener("resize", () => {
-  engine.resize();
+  //engine.resize();
 });
 
 function modifySettings() {

@@ -240,7 +240,7 @@ export default class Dude {
     let width = this.scene.getEngine().getRenderWidth();
     let height = this.scene.getEngine().getRenderHeight();
     let pickInfos = this.scene.multiPick(width/2, height/2);
-
+    console.log(pickInfos)
     // 2 - find the closest hit mesh that is not yourself
     for(let i=0; i < pickInfos.length; i++) {
       // with pickInfo we can get the closest mesh or even the impact 3D point located "behind"
@@ -248,9 +248,8 @@ export default class Dude {
       // similar here....
       let mesh = pickInfos[i].pickedMesh;
       let impactPoint = pickInfos[i].pickedPoint;
-
       // we dont't want a collision with our own bounding box (bounder-1)
-      if ((mesh.name.startsWith("bounder") && mesh.name !== "bounder-1")) {
+      if ((mesh.name.startsWith("bounder") && mesh.name !== "bounder-1") && mesh.name!=="skybox") {
         console.log(mesh.name)
         // we hit a dude
         let bounder = mesh;
