@@ -62,6 +62,12 @@ function createScene() {
 
   loadSounds(scene);
 
+  /*BABYLON.SceneLoader.ImportMesh("", "models/scenes/", "BrainStem.gltf", scene, function (meshes) {          
+    scene.createDefaultCameraOrLight(true, true, true);
+    scene.createDefaultEnvironment();
+    */
+});
+
   return scene;
 }
 
@@ -222,6 +228,8 @@ function createGround(scene) {
       scene
     );
     groundMaterial.diffuseTexture = new BABYLON.Texture("images/grass.jpg");
+    groundMaterial.diffuseTexture.uScale = 40.0;//Repeat 5 times on the Vertical Axes
+    groundMaterial.diffuseTexture.vScale = 40.0;//Repeat 5 times on the Horizontal Axes
     ground.material = groundMaterial;
     // to be taken into account by collision detection
     ground.checkCollisions = true;
