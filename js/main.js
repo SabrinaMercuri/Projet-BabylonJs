@@ -1,5 +1,7 @@
 import Dude from "./Dude.js";
 import Wall from "./Wall.js";
+import walls from "../json/walls.js";
+import ennemi from "../json/ennemi.js";
 
 let canvas;
 let engine;
@@ -62,7 +64,8 @@ function createScene() {
 
   loadSounds(scene);
 
-  /*BABYLON.SceneLoader.ImportMesh("", "models/scenes/", "BrainStem.gltf", scene, function (meshes) {          
+  /*/// pour ajouter un autre perso
+  BABYLON.SceneLoader.ImportMesh("", "models/scenes/", "BrainStem.gltf", scene, function (meshes) {          
     scene.createDefaultCameraOrLight(true, true, true);
     scene.createDefaultEnvironment();
     
@@ -72,10 +75,12 @@ function createScene() {
 }
 
 function createWalls(){
-  let walls = getWallsByLevel();
+  console.log(walls)
+  let tabWalls = walls[level-1];
+  let murs = [];
 
-  for(let i=0;i<walls.length;i++){
-    walls[i] = new Wall(walls[i].taille,walls[i].pos,i,scene); 
+  for(let i=0;i<tabWalls.length;i++){
+    murs[i] = new Wall(tabWalls[i].taille,tabWalls[i].pos,i,scene); 
   }
 }
 
@@ -621,9 +626,20 @@ function createHeroDude(scene) {
     scene.freeCameraDude = createFreeCamera(scene, freeCamPosition);
     // associate a crosshair to this cam, to see where we are aiming
     loadCrossHair(scene);
-    scene.ennemi = doClone(heroDude,skeletons,1);
-    var temp = new Dude(scene.ennemi, 1, 0.3, 0.2, scene);
-    scene.ennemi.unshift(heroDude);
+    
+    
+    /*scene.mechant = doClone(heroDude,skeletons,1);
+    var temp = new Dude(scene.mechant, 1, 0.3, 0.2, scene);
+    scene.mechant.unshift(heroDude);*/
+    let tabEnnemi = ennemi[level-1];
+    let nbEnnemi = tabEnnemi.length;
+    for(let j=0;j<nbEnnemi;j++){
+      console.log(nbEnnemi)
+      let monstre = doClone(heroDude,skeletons,j,tabEnnemi[j].pos);
+      let anglou = new Dude(monstre, (j+1), 0.3, 0.2, scene);
+      ///monstre.unshift(heroDude);      
+    }
+    console.log("fin de creation")
     // make clones
     /*scene.dudes = [];
     for (let i = 0; i < 10; i++) {
@@ -643,21 +659,26 @@ function createHeroDude(scene) {
   }
 }
 
-function doClone(originalMesh, skeletons, id) {
+function doClone(originalMesh, skeletons, id, pos) {
+  
+  console.log(skeletons)
   let myClone;
-  let xrand = /*Math.floor(Math.random() * 500 - 250)*/-80;
-  let zrand = /*Math.floor(Math.random() * 500 - 250)*/680;
+  let xrand = /*Math.floor(Math.random() * 500 - 250)*/pos.x;
+  let zrand = /*Math.floor(Math.random() * 500 - 250)*/pos.z;
 
   myClone = originalMesh.clone("clone_" + id);
   myClone.position = new BABYLON.Vector3(xrand, 0, zrand);
-
-  if (!skeletons) return myClone;
-
+  if (!skeletons) {
+    console.log("1");
+    return myClone;
+  }
   // The mesh has at least one skeleton
   if (!originalMesh.getChildren()) {
     myClone.skeleton = skeletons[0].clone("clone_" + id + "_skeleton");
+    console.log("2");
     return myClone;
-  } else {
+  } 
+  else {
     if (skeletons.length === 1) {
       // the skeleton controls/animates all children, like in the Dude model
       let clonedSkeleton = skeletons[0].clone("clone_" + id + "_skeleton");
@@ -667,6 +688,7 @@ function doClone(originalMesh, skeletons, id) {
       for (let i = 0; i < nbChildren; i++) {
         myClone.getChildren()[i].skeleton = clonedSkeleton;
       }
+      console.log("3");
       return myClone;
     } else if (skeletons.length === originalMesh.getChildren().length) {
       // each child has its own skeleton
@@ -675,10 +697,11 @@ function doClone(originalMesh, skeletons, id) {
           "clone_" + id + "_skeleton_" + i
         );
       }
+      console.log("4");
       return myClone;
     }
   }
-
+  console.log("5");
   return myClone;
 }
 
@@ -688,10 +711,10 @@ function moveHeroDude() {
 }
 
 function moveOtherDudes() {
-  if (scene.dudes) {
+  if (scene.mechant) {
     // start at 1 so the original dude will not move and follow the tank...
-    for (var i = 1; i < scene.dudes.length; i++) {
-      scene.dudes[i].Dude.followTank(scene);
+    for (var i = 1; i < scene.mechant.length; i++) {
+      scene.mechant[i].Dude.followTank(scene);
     }
   }
 }
@@ -699,65 +722,6 @@ function moveOtherDudes() {
 window.addEventListener("resize", () => {
   //engine.resize();
 });
-
-function getWallsByLevel(){
-  ///murs couloir
-  let walls = [
-                [{
-                  pos : { x :40, y :20,z : 700  },
-                  taille : {height: 40, width: 5, depth: 600}
-                },
-                {
-                  pos : { x :-40, y :20,z : 850  },
-                  taille : {height: 40, width: 5, depth: 300}
-                },
-                {
-                  pos : { x :-100, y :20,z : 702.5  },
-                  taille : {height: 40, width: 120, depth: 5}
-                },
-                {
-                  pos : { x :-100, y :20, z :662.5  },
-                  taille : {height: 40, width: 120, depth: 5}
-                },
-                {
-                  pos : { x :-140, y :20, z :682.5  },
-                  taille : {height: 40, width: 5, depth: 40}
-                },
-                {
-                  pos : { x :-40, y :20, z :365  },
-                  taille : {height: 40, width: 5, depth: 600}
-                },
-                {
-                  pos : { x :-40, y :20, z :365  },
-                  taille : {height: 40, width: 5, depth: 600}
-                },
-                {
-                  pos : { x :100, y :20, z :402.5  },
-                  taille : {height: 40, width: 120, depth: 5}
-                },
-                {
-                  pos : { x :100, y :20, z :362.5  },
-                  taille : {height: 40, width: 120, depth: 5}
-                },
-                {
-                  pos : { x :140, y :20, z :382.5  },
-                  taille : {height: 40, width: 5, depth: 40}
-                },
-                {
-                  pos : { x :40, y :20, z :215  },
-                  taille : {height: 40, width: 5, depth: 300}
-                },
-                {
-                  pos : { x :0, y :20, z :65  },
-                  taille : {height: 40, width: 80, depth: 5}
-                },
-                {
-                  pos : { x :0, y :20, z :995  },
-                  taille : {height: 40, width: 80, depth: 5}
-                }]
-              ]
-  return walls[level-1];
-}
 
 function modifySettings() {
   // as soon as we click on the game window, the mouse pointer is "locked"
