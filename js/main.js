@@ -65,8 +65,8 @@ function createScene() {
   /*BABYLON.SceneLoader.ImportMesh("", "models/scenes/", "BrainStem.gltf", scene, function (meshes) {          
     scene.createDefaultCameraOrLight(true, true, true);
     scene.createDefaultEnvironment();
-    */
-});
+    
+});*/
 
   return scene;
 }
