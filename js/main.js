@@ -7,7 +7,7 @@ let canvas;
 let engine;
 let scene;
 window.onload = startGame;
-let level=1;
+let level=2;
 
 function startGame() {
   canvas = document.querySelector("#myCanvas");
@@ -49,7 +49,7 @@ function createScene() {
   scene.assetsManager = configureAssetManager(scene);
 
   let ground = createGround(scene);
-  //let freeCamera = createFreeCamera(scene);
+  let freeCamera = createFreeCamera(scene);
 
   
   createWalls();
@@ -58,7 +58,7 @@ function createScene() {
   createHeroDude(scene); // we added the creation of a follow camera for the dude
   // second parameter is the target to follow
   //scene.followCameraTank = createFollowCamera(scene, player);
-  scene.activeCamera = scene.followCameraDude;
+  scene.activeCamera = scene.freeCameraDude;
 
   createLights(scene);
 
