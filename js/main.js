@@ -9,6 +9,7 @@ let engine;
 let scene;
 window.onload = startGame;
 let level=1;
+let coinPick = 0;
 
 function startGame() {
   canvas = document.querySelector("#myCanvas");
@@ -758,6 +759,8 @@ function moveHeroDude() {
   if(finish){
     console.log("coucou")
     level++;
+    scene.assets.pirateMusic.stop();
+    coinPick=0;
     startGame();
   }
 }
@@ -765,7 +768,7 @@ function moveHeroDude() {
 function checkPositionFinish(heroDude){
   switch(level){
     case 1:{
-      if(heroDude.position.z<270){
+      if(heroDude.position.z<270 && coinPick===coin[level-1].length){
         return true;
       }
       return false;
@@ -789,7 +792,8 @@ function pickCoin(heroDude){
       if(Math.abs(heroDude.position.x-piece.position.x)<20 && Math.abs(heroDude.position.z-piece.position.z)<20){
         console.log("rammase")
         scene.assets.coinSound.play();
-        piece.dispose()
+        piece.dispose();
+        coinPick++;
       }
     }
   } 
