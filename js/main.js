@@ -708,6 +708,32 @@ function doClone(originalMesh, skeletons, id, pos) {
 function moveHeroDude() {
   let heroDude = scene.getMeshByName("heroDude");
   if (heroDude) heroDude.Dude.moveFPS(scene);
+  let finish = checkPositionFinish(heroDude);
+  if(finish){
+    console.log("coucou")
+    level++;
+    startGame();
+  }
+}
+
+function checkPositionFinish(heroDude){
+  switch(level){
+    case 1:{
+      if(heroDude.position.z<270){
+        return true;
+      }
+      return false;
+    }
+    case 2:{
+      if(heroDude.position.z<-1500){
+        return true;
+      }
+      return false;
+    }
+    default:{
+      return false;
+    }
+  }
 }
 
 function moveOtherDudes() {

@@ -55,7 +55,7 @@ export default class Dude {
     this.followGround();
 
     // follow the tank
-    let tank = scene.getMeshByName("heroTank");
+    let tank = scene.getMeshByName("heroDude");
     // let's compute the direction vector that goes from Dude to the tank
     let direction = tank.position.subtract(this.dudeMesh.position);
     let distance = direction.length(); // we take the vector that is not normalized, not the dir vector
@@ -113,7 +113,7 @@ export default class Dude {
       // like with followTank(), dude takes bounding box position, as we choosed to move the bbox
       this.dudeMesh.position.x = this.bounder.position.x;
       this.dudeMesh.position.z = this.bounder.position.z;
-
+      
       // adjust y position dependingOn Ground height
       let groundHeight = this.followGround();
 

@@ -51,5 +51,15 @@ export default
     {
       "pos" : { "x" :0, "y" :20, "z" :995  },
       "taille" : {"height": 40, "width": 80, "depth": 5}
-    }]
+    }],
+    [
+      {
+        "pos" : { "x" :40, "y" :20,"z" : 700  },
+        "taille" : {"height": 40, "width": 5, "depth": 600}
+      },
+      {
+        "pos" : { "x" :-40, "y" :20,"z" : 850  },
+        "taille" : {"height": 40, "width": 5, "depth": 300}
+      }
+    ]
   ]
