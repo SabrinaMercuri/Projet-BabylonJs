@@ -688,7 +688,7 @@ function doClone(originalMesh, skeletons, id, pos) {
       for (let i = 0; i < nbChildren; i++) {
         myClone.getChildren()[i].skeleton = clonedSkeleton;
       }
-      console.log("3");
+      console.log(myClone.name);
       return myClone;
     } else if (skeletons.length === originalMesh.getChildren().length) {
       // each child has its own skeleton
@@ -708,6 +708,9 @@ function doClone(originalMesh, skeletons, id, pos) {
 function moveHeroDude() {
   let heroDude = scene.getMeshByName("heroDude");
   if (heroDude) heroDude.Dude.moveFPS(scene);
+
+  moveOtherDudes(heroDude);
+  // end of the level
   let finish = checkPositionFinish(heroDude);
   if(finish){
     console.log("coucou")
@@ -736,11 +739,13 @@ function checkPositionFinish(heroDude){
   }
 }
 
-function moveOtherDudes() {
-  if (scene.mechant) {
-    // start at 1 so the original dude will not move and follow the tank...
-    for (var i = 1; i < scene.mechant.length; i++) {
-      scene.mechant[i].Dude.followTank(scene);
+function moveOtherDudes(heroDude) {
+  for(let i=0;i<ennemi[level-1].length;i++){
+    let monstre = scene.getMeshByName("clone_"+i);
+    console.log(monstre)
+    if(monstre.position.z-heroDude.position.z<40){
+      scene.beginAnimation(monstre, 0, 120, true, 1);
+      monstre.Dude.followTank(scene);
     }
   }
 }
