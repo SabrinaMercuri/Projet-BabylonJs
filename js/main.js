@@ -2,12 +2,13 @@ import Dude from "./Dude.js";
 import Wall from "./Wall.js";
 import walls from "../json/walls.js";
 import ennemi from "../json/ennemi.js";
+import coin from "../json/coin.js";
 
 let canvas;
 let engine;
 let scene;
 window.onload = startGame;
-let level=2;
+let level=1;
 
 function startGame() {
   canvas = document.querySelector("#myCanvas");
@@ -29,7 +30,6 @@ function startGame() {
     //tank.move();
     //tank.fireCannonBalls(); // will fire only if space is pressed !
     //tank.fireLasers(); // will fire only if l is pressed !
-
     moveHeroDude();
     //moveOtherDudes();
 
@@ -59,7 +59,7 @@ function createScene() {
   // second parameter is the target to follow
   //scene.followCameraTank = createFollowCamera(scene, player);
   scene.activeCamera = scene.freeCameraDude;
-
+  createCoin();
   createLights(scene);
 
   loadSounds(scene);
@@ -82,6 +82,36 @@ function createWalls(){
   for(let i=0;i<tabWalls.length;i++){
     murs[i] = new Wall(tabWalls[i].taille,tabWalls[i].pos,i,scene); 
   }
+}
+
+function createCoin(){
+
+  var objectMaterial = new BABYLON.StandardMaterial("groundTexture", scene);
+  objectMaterial.diffuseTexture = new BABYLON.Texture("images/coin.png", scene);
+
+  for(let i=0;i<coin[level-1].length;i++){
+    let pos = coin[level-1][i].pos;
+    var cylinder = BABYLON.Mesh.CreateCylinder("cyl"+i, 0.2, 5, 5, 25, 4, scene);
+    cylinder.position.x = pos.x;
+    cylinder.position.y = pos.y;
+    cylinder.position.z = pos.z;
+    cylinder.material = objectMaterial;
+
+    cylinder.rotation.x +=190;
+  }
+  
+  
+  animCoin()
+}
+
+
+
+function animCoin(){
+  for(let i=0;i<coin[level-1].length;i++){
+    let coin = scene.getMeshByName("cyl"+i);
+    if(coin!=null){coin.rotation.y +=1;}
+  } 
+  setTimeout(animCoin,150)
 }
 
 function createSkybox(scene) {
@@ -149,6 +179,17 @@ function loadSounds(scene) {
       scene,
       null,
       { loop: false, spatialSound: true }
+    );
+  };
+  
+  binaryTask = assetsManager.addBinaryFileTask("coin", "sounds/get-coin.mp3");
+  binaryTask.onSuccess = function (task) {
+    scene.assets.coinSound = new BABYLON.Sound(
+      "coin",
+      task.data,
+      scene,
+      null,
+      { loop: false}
     );
   };
 
@@ -709,7 +750,9 @@ function moveHeroDude() {
   let heroDude = scene.getMeshByName("heroDude");
   if (heroDude) heroDude.Dude.moveFPS(scene);
 
-  moveOtherDudes(heroDude);
+  pickCoin(heroDude);
+
+  moveOtherDudes();
   // end of the level
   let finish = checkPositionFinish(heroDude);
   if(finish){
@@ -739,7 +782,21 @@ function checkPositionFinish(heroDude){
   }
 }
 
-function moveOtherDudes(heroDude) {
+function pickCoin(heroDude){
+  for(let i=0;i<coin[level-1].length;i++){
+    let piece = scene.getMeshByName("cyl"+i);
+    if(piece!=null){
+      if(Math.abs(heroDude.position.x-piece.position.x)<20 && Math.abs(heroDude.position.z-piece.position.z)<20){
+        console.log("rammase")
+        scene.assets.coinSound.play();
+        piece.dispose()
+      }
+    }
+  } 
+}
+
+
+function moveOtherDudes() {
   for(let i=0;i<ennemi[level-1].length;i++){
     let monstre = scene.getMeshByName("clone_"+i);
     if(monstre != null){
