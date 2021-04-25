@@ -742,8 +742,7 @@ function checkPositionFinish(heroDude){
 function moveOtherDudes(heroDude) {
   for(let i=0;i<ennemi[level-1].length;i++){
     let monstre = scene.getMeshByName("clone_"+i);
-    console.log(monstre)
-    if(monstre.position.z-heroDude.position.z<40){
+    if(monstre != null){
       scene.beginAnimation(monstre, 0, 120, true, 1);
       monstre.Dude.followTank(scene);
     }

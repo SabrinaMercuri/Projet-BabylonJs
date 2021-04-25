@@ -72,7 +72,7 @@ export default class Dude {
 
     // let make the Dude move towards the tank
     // first let's move the bounding box mesh
-    if (distance > 30) {
+    if (distance > 30 && distance < 200) {
       //a.restart();
       // Move the bounding box instead of the dude....
       this.bounder.moveWithCollisions(
