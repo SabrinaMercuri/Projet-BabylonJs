@@ -86,7 +86,7 @@ export default
         taille : {height: 40, width: 120,depth: 5}
       },
       {
-        pos : { x :-360, y :20, z :-37.5 },
+        pos : { x :-360, y :20, z :-35 },
         taille : {height: 40, width: 5,depth: 80}
       },
       ///piliers

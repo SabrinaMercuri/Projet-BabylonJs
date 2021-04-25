@@ -3,6 +3,7 @@ import Wall from "./Wall.js";
 import walls from "../json/walls.js";
 import ennemi from "../json/ennemi.js";
 import coin from "../json/coin.js";
+import finish from "../json/finish.js";
 
 let canvas;
 let engine;
@@ -61,6 +62,8 @@ function createScene() {
   //scene.followCameraTank = createFollowCamera(scene, player);
   scene.activeCamera = scene.freeCameraDude;
   createCoin();
+  createArrive();
+
   createLights(scene);
 
   loadSounds(scene);
@@ -105,14 +108,24 @@ function createCoin(){
   animCoin()
 }
 
-
-
 function animCoin(){
   for(let i=0;i<coin[level-1].length;i++){
     let coin = scene.getMeshByName("cyl"+i);
     if(coin!=null){coin.rotation.y +=1;}
   } 
   setTimeout(animCoin,150)
+}
+
+function createArrive(){
+  let pos = finish[level-1];
+  console.log(pos)
+  let arrive = BABYLON.MeshBuilder.CreateBox("finish",pos.taille,scene);
+  let arriveMaterial = new BABYLON.StandardMaterial("material",scene);
+  arriveMaterial.diffuseColor = new BABYLON.Color3.Red;
+  arriveMaterial.alpha = 0.2;
+  arrive.material = arriveMaterial;
+  arrive.position.x = pos.pos.x; arrive.position.y = pos.pos.y; arrive.position.z=pos.pos.z;
+  
 }
 
 function createSkybox(scene) {
@@ -768,7 +781,7 @@ function moveHeroDude() {
 function checkPositionFinish(heroDude){
   switch(level){
     case 1:{
-      if(heroDude.position.z<270 && coinPick===coin[level-1].length){
+      if(heroDude.position.z<100 && coinPick===coin[level-1].length){
         return true;
       }
       return false;
@@ -796,6 +809,10 @@ function pickCoin(heroDude){
         coinPick++;
       }
     }
+  }
+  if(coinPick===2){
+    let arrive = scene.getMeshByName("finish");
+    arrive.material.diffuseColor = new BABYLON.Color3(0,1,0);
   } 
 }
 
