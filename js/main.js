@@ -9,7 +9,7 @@ let canvas;
 let engine;
 let scene;
 window.onload = startGame;
-let level=1;
+let level=2;
 let coinPick = 0;
 let advancedTexture;
 let textblock;
@@ -849,9 +849,22 @@ function checkPositionFinish(heroDude){
       return false;
     }
     case 2:{
-      if(heroDude.position.x<-320 && coinPick===coin[level-1].length){
-        level=0;
-        return true;
+      if(heroDude.position.x<-320 && coinPick===coin[level-1].length){   
+        canvas.requestPointerLock();
+        var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Retour au niveau 1");
+        button1.width = "200px"
+        button1.height = "40px";
+        button1.color = "white";
+        button1.cornerRadius = 20;
+        button1.background = "green";
+        button1.onPointerUpObservable.add(function() {
+        scene.assets.pirateMusic.stop();
+        coinPick=0;
+        level=1;
+        startGame();
+      });
+      advancedTexture.addControl(button1);    
+        return false;
       }
       return false;
     }
