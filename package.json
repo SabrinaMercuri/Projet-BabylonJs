@@ -1,0 +1,25 @@
+{
+  "name": "Projet-BabylonJs",
+  "version": "1.0.0",
+  "description": "Stéphane Désiré  \r Sabrina Mercuri",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "node ./js/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SabrinaMercuri/Projet-BabylonJs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SabrinaMercuri/Projet-BabylonJs/issues"
+  },
+  "homepage": "https://github.com/SabrinaMercuri/Projet-BabylonJs#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
