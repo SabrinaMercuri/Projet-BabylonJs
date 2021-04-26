@@ -11,6 +11,8 @@ let scene;
 window.onload = startGame;
 let level=1;
 let coinPick = 0;
+let advancedTexture;
+let textblock;
 
 function startGame() {
   canvas = document.querySelector("#myCanvas");
@@ -74,6 +76,17 @@ function createScene() {
     scene.createDefaultEnvironment();
     
 });*/
+
+// GUI
+  advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+  textblock = new BABYLON.GUI.TextBlock();
+  textblock.text = "Niveau: "+level+" - Coins: "+coinPick+"/2 - Vies: /3 ";
+  textblock.fontSize = 24;
+  textblock.top = -420;
+  textblock.left = -400;
+  textblock.color = "orange";
+  textblock.fontWeight= "bold";
+  advancedTexture.addControl(textblock);
 
   return scene;
 }
@@ -779,15 +792,16 @@ function moveHeroDude() {
 }
 
 function checkPositionFinish(heroDude){
+  let arrive = scene.getMeshByName("finish");
   switch(level){
     case 1:{
-      if(heroDude.position.z<100 && coinPick===coin[level-1].length){
+      if(heroDude.position.z<150 && coinPick===coin[level-1].length){
         return true;
       }
       return false;
     }
     case 2:{
-      if(heroDude.position.z<-1500){
+      if(heroDude.position.x<-320 && coinPick===coin[level-1].length){
         return true;
       }
       return false;
@@ -807,6 +821,7 @@ function pickCoin(heroDude){
         scene.assets.coinSound.play();
         piece.dispose();
         coinPick++;
+        textblock.text = "Niveau: "+level+" - Coins: "+coinPick+"/2 - Vies: /3 ";
       }
     }
   }
