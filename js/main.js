@@ -240,7 +240,7 @@ function loadSounds(scene) {
   };
 
   ///son de fond
-  binaryTask = assetsManager.addBinaryFileTask("pirates", "sounds/PirateFun.mp3");
+  binaryTask = assetsManager.addBinaryFileTask("pirates", "sounds/pirateFun.mp3");
   binaryTask.onSuccess = function (task) {
     scene.assets.pirateMusic = new BABYLON.Sound(
       "pirates",
