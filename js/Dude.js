@@ -3,6 +3,7 @@ export default class Dude {
     this.dudeMesh = dudeMesh;
     this.id = id;
     this.scene = scene;
+    this.canHit = true;
     this.scaling = scaling;
     this.health = 3; // three shots to kill the dude !
     this.frontVector = new BABYLON.Vector3(0, 0, -1); // at start dude is facing camera looking to -Z
@@ -69,10 +70,9 @@ export default class Dude {
     //this.bounder.rotation.y = alpha;
 
     this.dudeMesh.rotation.y = alpha;
-
     // let make the Dude move towards the tank
     // first let's move the bounding box mesh
-    if (distance > 30 && distance < 200) {
+    if (distance < 200) {
       //a.restart();
       // Move the bounding box instead of the dude....
       this.bounder.moveWithCollisions(

@@ -18,6 +18,7 @@ function startGame() {
   canvas = document.querySelector("#myCanvas");
   engine = new BABYLON.Engine(canvas, true);
   scene = createScene();
+  coinPick = 0;
 
   // enable physics
   scene.enablePhysics();
@@ -25,7 +26,6 @@ function startGame() {
   // modify some default settings (i.e pointer events to prevent cursor to go
   // out of the game window)
   modifySettings();
-
   //let tank = scene.getMeshByName("heroTank");
 
   scene.toRender = () => {
@@ -70,17 +70,10 @@ function createScene() {
 
   loadSounds(scene);
 
-  /*/// pour ajouter un autre perso
-  BABYLON.SceneLoader.ImportMesh("", "models/scenes/", "BrainStem.gltf", scene, function (meshes) {          
-    scene.createDefaultCameraOrLight(true, true, true);
-    scene.createDefaultEnvironment();
-    
-});*/
-
 // GUI
   advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
   textblock = new BABYLON.GUI.TextBlock();
-  textblock.text = "Niveau: "+level+" - Coins: "+coinPick+"/2 - Vies: /3 ";
+  textblock.text = "Niveau: "+level+" - Coins: "+coinPick+"/2 - Vies: 3/3 ";
   textblock.fontSize = 24;
   textblock.top = -420;
   textblock.left = -400;
@@ -247,10 +240,10 @@ function loadSounds(scene) {
   };
 
   ///son de fond
-  binaryTask = assetsManager.addBinaryFileTask("pirates", "sounds/pirateFun.mp3");
+  binaryTask = assetsManager.addBinaryFileTask("pirates", "sounds/PirateFun.mp3");
   binaryTask.onSuccess = function (task) {
     scene.assets.pirateMusic = new BABYLON.Sound(
-      "piratesFun",
+      "pirates",
       task.data,
       scene,
       null,
@@ -707,7 +700,17 @@ function createHeroDude(scene) {
       let anglou = new Dude(monstre, (j+1), 0.3, 0.2, scene);
       ///monstre.unshift(heroDude);      
     }
-    console.log("fin de creation")
+    console.log("fin de creation");
+    
+
+  
+  for(let i=0;i<ennemi[level-1].length;i++){
+    let monstre = scene.getMeshByName("clone_"+i);
+    console.log(monstre)
+    if(monstre != null || monstre!=undefined){
+      checkCollisionWithHeroDude(monstre)
+    }
+  }
     // make clones
     /*scene.dudes = [];
     for (let i = 0; i < 10; i++) {
@@ -724,6 +727,51 @@ function createHeroDude(scene) {
     // insert at pos 0, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
     // it will be easier for us to distinguish it later on...
     scene.dudes.unshift(heroDude);*/
+  }
+}
+
+function checkCollisionWithHeroDude(monstre){
+  // let's put the dude at the BBox position. in the rest of this
+  // method, we will not move the dude but the BBox instead
+  monstre = scene.getMeshByName(monstre.name);
+  if(monstre !== undefined || monstre !== null){
+    let position = new BABYLON.Vector3(
+      monstre.Dude.bounder.position.x,
+      monstre.Dude.bounder.position.y,
+      monstre.Dude.bounder.position.z
+    );
+    
+    // follow the tank
+    let tank = scene.getMeshByName("heroDude");
+    // let's compute the direction vector that goes from Dude to the tank
+    let direction = tank.position.subtract(position);
+    let distance = direction.length();
+    // let make the Dude move towards the tank
+    // first let's move the bounding box mesh
+    if (distance < 20) {
+      //a.restart();
+      // Move the bounding box instead of the dude...
+      tank.Dude.health--;
+      textblock.text = "Niveau: "+level+" - Coins: "+coinPick+"/2 -Vies: "+tank.Dude.health+"/3 ";
+      if(tank.Dude.health===0){
+        coinPick=0
+        textblock.text = "Niveau: "+level+" - Coins: "+coinPick+"/2 -Vies: "+tank.Dude.health+"/3 ";
+        setTimeout(startGame,200)
+      }
+      
+      setTimeout( () => {
+        checkCollisionWithHeroDude(monstre)
+      },2000);
+    }
+    else{
+      setTimeout( () => {
+      checkCollisionWithHeroDude(monstre)
+      },200);
+    }
+  }
+  else{
+    console.log("sossur")
+    setTimeout(checkCollisionWithHeroDude(monstre),2000);
   }
 }
 
@@ -781,8 +829,8 @@ function moveHeroDude() {
 
   moveOtherDudes();
   // end of the level
-  let finish = checkPositionFinish(heroDude);
-  if(finish){
+  let finishArrive = checkPositionFinish(heroDude);
+  if(finishArrive){
     console.log("coucou")
     level++;
     scene.assets.pirateMusic.stop();
@@ -791,8 +839,8 @@ function moveHeroDude() {
   }
 }
 
+///permet de passer au niveau suivant
 function checkPositionFinish(heroDude){
-  let arrive = scene.getMeshByName("finish");
   switch(level){
     case 1:{
       if(heroDude.position.z<150 && coinPick===coin[level-1].length){
@@ -802,6 +850,7 @@ function checkPositionFinish(heroDude){
     }
     case 2:{
       if(heroDude.position.x<-320 && coinPick===coin[level-1].length){
+        level=0;
         return true;
       }
       return false;
@@ -812,6 +861,7 @@ function checkPositionFinish(heroDude){
   }
 }
 
+///permet de récupérer les pièces
 function pickCoin(heroDude){
   for(let i=0;i<coin[level-1].length;i++){
     let piece = scene.getMeshByName("cyl"+i);
@@ -821,7 +871,7 @@ function pickCoin(heroDude){
         scene.assets.coinSound.play();
         piece.dispose();
         coinPick++;
-        textblock.text = "Niveau: "+level+" - Coins: "+coinPick+"/2 - Vies: /3 ";
+        textblock.text = "Niveau: "+level+" - Coins: "+coinPick+"/2 -Vies: "+heroDude.Dude.health+"/3 ";
       }
     }
   }
@@ -835,7 +885,7 @@ function pickCoin(heroDude){
 function moveOtherDudes() {
   for(let i=0;i<ennemi[level-1].length;i++){
     let monstre = scene.getMeshByName("clone_"+i);
-    if(monstre != null){
+    if(monstre != null || monstre!=undefined){
       scene.beginAnimation(monstre, 0, 120, true, 1);
       monstre.Dude.followTank(scene);
     }
