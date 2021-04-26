@@ -9,7 +9,7 @@ let canvas;
 let engine;
 let scene;
 window.onload = startGame;
-let level=2;
+let level=1;
 let coinPick = 0;
 let advancedTexture;
 let textblock;
