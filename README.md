@@ -19,3 +19,7 @@ Ps: si la caméra de base n'est pas bien placée (fond violet) appuyez sur U pou
 (mode à utiliser pour tirer sur les ennemis)  
 
 Le projet est effectué en live share avec visual studio : nous avons principalement travaillé ensemble, en temps réel sur le projet.  
+
+## Lien heroku :  
+
+## Lien vidéo :  
