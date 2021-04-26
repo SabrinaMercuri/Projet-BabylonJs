@@ -14,12 +14,14 @@ Il ne faut également pas se faire toucher par les monstres au risque de perdre 
 Nous avons également changé la musique de fond et intégré un son pour les pièces et nous avons mis d'autres motifs pour le sol et les murs.    
 
 On a placé les ennemis de façon précise et qui nous suivent dès que le HeroDude s'approche à une certaine distance.  
+Pour tirer il faut passer en mode FPS avec U (et revenir avec Y comme prévu dans le code initial récupéré)  
 
-Ps: si la caméra de base n'est pas bien placée (fond violet) appuyez sur U pour passer directement en FPS   
-(mode à utiliser pour tirer sur les ennemis)  
+Bug: il arrive que la caméra de base ne soit pas bien placée (fond violet) appuyez sur U pour passer directement en FPS 
+(mode à utiliser pour tirer sur les ennemis)  ou reload la page   
 
 Le projet est effectué en live share avec visual studio : nous avons principalement travaillé ensemble, en temps réel sur le projet.  
 
 ## Lien heroku :  
+https://herodude-desire-mercuri.herokuapp.com/  
 
 ## Lien vidéo :  
